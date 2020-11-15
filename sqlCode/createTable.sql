@@ -9,32 +9,20 @@ CREATE TABLE IF NOT EXISTS designer(
    uid BIGINT,
    bio VARCHAR(100),
    reviewScore FLOAT,
-   PRIMARY KEY (uid)
+   PRIMARY KEY (uid),
+   FOREIGN KEY (uid) REFERENCES user(uid)
 );
 
 CREATE TABLE IF NOT EXISTS customer(
    uid BIGINT,
-   PRIMARY KEY (uid)
+   PRIMARY KEY (uid),
+   FOREIGN KEY (uid) REFERENCES user(uid)
 );
 
 CREATE TABLE IF NOT EXISTS admin(
    uid BIGINT,
-   PRIMARY KEY (uid)
-);
-
-CREATE TABLE IF NOT EXISTS contract(
-    ctid BIGINT NOT NULL AUTO_INCREMENT,
-    detail VARCHAR(300),
-    mid VARCHAR(15),
-    PRIMARY KEY (ctid)
-);
-
-CREATE TABLE IF NOT EXISTS jobposting(
-    jid BIGINT NOT NULL AUTO_INCREMENT,
-    did VARCHAR(15),
-    sampleWorks BLOB,
-    description VARCHAR(500),
-    PRIMARY KEY (jid)
+   PRIMARY KEY (uid),
+   FOREIGN KEY (uid) REFERENCES user(uid)
 );
 
 CREATE TABLE IF NOT EXISTS transaction(
@@ -48,19 +36,40 @@ CREATE TABLE IF NOT EXISTS transaction(
 
 CREATE TABLE IF NOT EXISTS advertisement(
     aid BIGINT NOT NULL AUTO_INCREMENT,
-    uid VARCHAR(15),
+    uid BIGINT,
     startDate DATE,
     endDate DATE,
     advertiserEmail VARCHAR(100),
     adPicture BLOB,
-    PRIMARY KEY (aid)
+    PRIMARY KEY (aid),
+    FOREIGN KEY (uid) REFERENCES admin(uid)
+);
+
+CREATE TABLE IF NOT EXISTS jobposting(
+    jid BIGINT NOT NULL AUTO_INCREMENT,
+    did BIGINT,
+    sampleWorks BLOB,
+    description VARCHAR(500),
+    PRIMARY KEY (jid),
+    FOREIGN KEY (did) REFERENCES designer(uid)
 );
 
 CREATE TABLE IF NOT EXISTS matchs(
     mid BIGINT NOT NULL AUTO_INCREMENT,
-    did VARCHAR(15),
-    cid VARCHAR(15),
-    tid VARCHAR(15),
+    did BIGINT,
+    cid BIGINT,
+    tid BIGINT,
     score FLOAT,
-    PRIMARY KEY (mid)
+    PRIMARY KEY (mid),
+    FOREIGN KEY (did) REFERENCES designer(uid),
+    FOREIGN KEY (cid) REFERENCES customer(uid),
+    FOREIGN KEY (tid) REFERENCES transaction(tid)
+);
+
+CREATE TABLE IF NOT EXISTS contract(
+    ctid BIGINT NOT NULL AUTO_INCREMENT,
+    detail VARCHAR(300),
+    mid BIGINT,
+    PRIMARY KEY (ctid),
+    FOREIGN KEY (mid) REFERENCES matchs(mid)
 );
