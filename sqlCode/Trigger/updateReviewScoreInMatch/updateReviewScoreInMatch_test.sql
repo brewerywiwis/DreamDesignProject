@@ -1,0 +1,65 @@
+INSERT INTO Matchs VALUES
+(NULL, 1234567891237, 1234567891239, 5000000002, NULL),
+(NULL, 1234567891237, 1234567891239, 5000000002, NULL),
+(NULL, 1234567891237, 1234567891239, 5000000002, NULL),
+(NULL, 1234567891237, 1234567891239, 5000000002, NULL);
+
+SELECT mid, did, score
+FROM matchs
+WHERE did = 1234567891237;
+
+SELECT uid, reviewScore
+FROM designer
+WHERE uid = 1234567891237;
+
+-- Update
+UPDATE Matchs
+SET score = 9
+WHERE mid = 2000000005;
+
+SELECT mid, did, score
+FROM matchs
+WHERE did = 1234567891237;
+
+SELECT uid, reviewScore
+FROM designer
+WHERE uid = 1234567891237;
+
+-- Update
+UPDATE Matchs
+SET score = 3
+WHERE mid = 2000000007;
+
+SELECT mid, did, score
+FROM matchs
+WHERE did = 1234567891237;
+
+SELECT uid, reviewScore
+FROM designer
+WHERE uid = 1234567891237;
+
+-- Update
+UPDATE Matchs
+SET score = 4
+WHERE mid = 2000000008;
+
+SELECT mid, did, score
+FROM matchs
+WHERE did = 1234567891237;
+
+SELECT uid, reviewScore
+FROM designer
+WHERE uid = 1234567891237;
+
+-- Update
+UPDATE Matchs
+SET score = 7
+WHERE mid = 2000000009;
+
+SELECT mid, did, score
+FROM matchs
+WHERE did = 1234567891237;
+
+SELECT uid, reviewScore
+FROM designer
+WHERE uid = 1234567891237;

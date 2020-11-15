@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS matchs(
     did BIGINT,
     cid BIGINT,
     tid BIGINT,
-    score FLOAT,
+    score INT,
     PRIMARY KEY (mid),
     FOREIGN KEY (did) REFERENCES designer(uid),
     FOREIGN KEY (cid) REFERENCES customer(uid),
