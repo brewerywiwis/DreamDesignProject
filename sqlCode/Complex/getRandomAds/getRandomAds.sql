@@ -7,11 +7,13 @@ BEGIN
     SELECT a.advertiserEmail, 
         (SELECT b.aid 
         FROM Advertisement b 
-        WHERE endDate > NOW() AND a.advertiserEmail = b.advertiserEmail 
+        WHERE startDate < NOW() 
+            AND endDate > NOW() 
+            AND a.advertiserEmail = b.advertiserEmail 
         ORDER by rand() 
         LIMIT 1) AS random_aid
     FROM Advertisement a
-    WHERE endDate > NOW() 
+    WHERE startDate < NOW() AND endDate > NOW() 
     GROUP BY a.advertiserEmail
     ORDER by rand()
     LIMIT N;
