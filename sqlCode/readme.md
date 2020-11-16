@@ -11,3 +11,6 @@ reset.sql           > dropAllTable.sql then createTable.sql then sampleData.sql
 
 Trigger 
 updateReviewScoreInMatch.sql    > Update average score in designer when update match 
+
+Procedure
+getRandomAds.sql        > Random N advertise from different email

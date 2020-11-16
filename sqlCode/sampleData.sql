@@ -26,11 +26,11 @@ INSERT INTO Admin VALUES
 (1234567891244), (1234567891245); 
 
 INSERT INTO Advertisement VALUES
-(4000000001, 1234567891244, '10/11/20', '10/1/21', 'lazada@gmail.com', 'BLOB of a1.png'), 
-(NULL, 1234567891244, '11/11/20', '11/2/21', 'lazada@gmail.com', 'BLOB of a2.png'), 
-(NULL, 1234567891245, '12/11/20', '12/2/21', 'shoppee@hotmail.com', 'BLOB of a3.png'), 
-(NULL, 1234567891245, '13/11/20', '13/1/21', 'shoppee@hotmail.com', 'BLOB of a4.png'), 
-(NULL, 1234567891245, '14/11/20', '14/2/21', 'adthailand@gmail.com', 'BLOB of a5.png');
+(4000000001, 1234567891244, '2020/11/10', '2021/1/10', 'lazada@gmail.com', 'BLOB of a1.png'), 
+(NULL, 1234567891244, '2020/11/11', '21/2/11', 'lazada@gmail.com', 'BLOB of a2.png'), 
+(NULL, 1234567891245, '2020/11/12', '21/2/12', 'shoppee@hotmail.com', 'BLOB of a3.png'), 
+(NULL, 1234567891245, '2020/11/13', '21/1/13', 'shoppee@hotmail.com', 'BLOB of a4.png'), 
+(NULL, 1234567891245, '2020/11/14', '21/2/14', 'adthailand@gmail.com', 'BLOB of a5.png');
 
 INSERT INTO Transaction (tid, bank, amount, status) VALUES
 (5000000001, 'Government Savings Bank', 600, false), 
