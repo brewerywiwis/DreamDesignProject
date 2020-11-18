@@ -1,4 +1,11 @@
-def queryUser(db):
+import DAL.connection as connection
+
+
+db = connection.db().getDB()
+
+
+def queryUser():
+    global db
     cursor = db.cursor()
 
     query = ("SELECT * FROM user")
@@ -18,7 +25,8 @@ def queryUser(db):
     return result
 
 
-def insertUser(db, name, pw):
+def insertUser(name, pw):
+    global db
     cursor = db.cursor()
 
     sql = ("INSERT INTO user (username, password) VALUES (%s,%s);")
@@ -29,3 +37,14 @@ def insertUser(db, name, pw):
 
     print("insert completed")
     cursor.close()
+
+
+def validUser(username, password):
+    global db
+    cursor = db.cursor()
+    sql = ("SELECT * FROM dreamdesignDB.admin NATURAL JOIN dreamdesignDB.user WHERE username=%s and password=%s;")
+    cursor.execute(sql, (username, password))
+    result = list(cursor)
+    cursor.close()
+
+    return 1 if len(result) else 0
