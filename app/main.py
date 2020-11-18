@@ -1,4 +1,5 @@
 import os
+import platform
 from tkinter import *
 from tkinter import ttk
 from Frame.application import Application
@@ -21,8 +22,11 @@ if __name__ == "__main__":
                          "configure": {"padding": [20, 5]}}})
 
     style.configure('pad.TEntry', padding='5 5 5 5')
+
+    sep = '/' if platform.system() == 'Darwin' else "\\"
     root.iconbitmap(os.path.dirname(
-        os.path.abspath(__file__))+"\dreamDesignManagementLogo.ico")
+        os.path.abspath(__file__))+sep+"dreamDesignManagementLogo.ico")
+        
     root.configure(background='white')
     root.title("Dream Design Management")
     root.geometry("800x800")

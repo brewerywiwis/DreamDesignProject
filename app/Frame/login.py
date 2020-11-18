@@ -1,4 +1,5 @@
 import os
+import platform
 from tkinter import *
 from tkinter import ttk
 from PIL import ImageTk, Image
@@ -13,9 +14,10 @@ class LoginFrame(Frame):
         self.createLogin()
 
     def createLogin(self):
+        sep = '/' if platform.system() == 'Darwin' else "\\"
         path = os.path.dirname(os.path.abspath(__file__))
-        path2 = os.path.join(path[:path.rfind("\\")] +
-                             "\\dreamDesignManagementLogo.png")
+        path2 = os.path.join(path[:path.rfind(sep)] +
+                             sep + "dreamDesignManagementLogo.png")
         logoImg = ImageTk.PhotoImage(Image.open(path2))
 
         self.logoLabel = Label(self, image=logoImg, bg="white")
