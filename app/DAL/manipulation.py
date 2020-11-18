@@ -1,6 +1,5 @@
 import DAL.connection as connection
 
-
 db = connection.db().getDB()
 
 
@@ -28,15 +27,68 @@ def queryUser():
 def insertUser(name, pw):
     global db
     cursor = db.cursor()
+    try:
+        sql = ("INSERT INTO dreamdesignDB.user (username, password) VALUES (%s,%s);")
+        cursor.execute(sql, (name, pw))
+        db.commit()
+        cursor.close()
+    except:
+        print("insert user")
+        cursor.close()
+        return False
+    return True
 
-    sql = ("INSERT INTO user (username, password) VALUES (%s,%s);")
 
-    cursor.execute(sql, (name, pw))
-
-    db.commit()
-
-    print("insert completed")
-    cursor.close()
+def insertAdmin(name, pw):
+    global db
+    sql = ("SELECT * FROM dreamdesignDB.user WHERE username=%s;")
+    cursor = db.cursor()
+    cursor.execute(sql, (name,))
+    ls = list(cursor)
+    id = -1
+    if len(ls):
+        id = ls[0][0]
+    if id == -1:
+        if len(name) and len(pw) and insertUser(name, pw):
+            sql1 = "select * from user where username=%s and password=%s"
+            cursor.execute(sql1, (name, pw))
+            ls = list(cursor)
+            id = -1
+            if len(ls):
+                id = ls[0][0]
+            else:
+                sql2 = "DELETE FROM dreamdesignDB.user WHERE username=%s;"
+                cursor.execute(sql2, (name,))
+                db.commit()
+                cursor.close()
+                return False
+            try:
+                sql2 = ("INSERT INTO dreamdesignDB.admin (uid) VALUES (%s);")
+                cursor.execute(sql2, (id,))
+                db.commit()
+                cursor.close()
+                return True
+            except:
+                print("Something went wrong: insert admin")
+                sql2 = "DELETE FROM dreamdesignDB.user WHERE username=%s;"
+                cursor.execute(sql2, (name,))
+                db.commit()
+                cursor.close()
+                return False
+        else:
+            cursor.close()
+            return False
+    else:
+        try:
+            sql2 = ("INSERT INTO dreamdesignDB.admin (uid) VALUES (%s);")
+            cursor.execute(sql2, (id,))
+            db.commit()
+            cursor.close()
+            return True
+        except:
+            print("Something went wrong: not insert admin")
+            cursor.close()
+            return False
 
 
 def validUser(username, password):
@@ -48,3 +100,37 @@ def validUser(username, password):
     cursor.close()
 
     return 1 if len(result) else 0
+
+
+def queryAdmin():
+    global db
+    cursor = db.cursor()
+    query = ("SELECT * FROM dreamdesignDB.admin NATURAL JOIN dreamdesignDB.user")
+    cursor.execute(query)
+    result = list(cursor)
+    cursor.close()
+    return result
+
+
+def deleteAdmin(name):
+    global db
+    cursor = db.cursor()
+    print(name)
+    try:
+        sql1 = "SELECT * FROM dreamdesignDB.admin NATURAL JOIN dreamdesignDB.user where username=%s;"
+        cursor.execute(sql1, (name,))
+        ls = list(cursor)
+        id = -1
+        if len(ls):
+            id = ls[0][0]
+        else:
+            cursor.close()
+            return False
+        sql2 = "DELETE FROM dreamdesignDB.admin WHERE uid=%s;"
+        cursor.execute(sql2, (id,))
+        db.commit()
+        cursor.close()
+        return True
+    except:
+        cursor.close()
+        return False

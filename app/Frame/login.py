@@ -1,9 +1,8 @@
 import os
 import platform
 from tkinter import *
-from tkinter import ttk
+from tkinter import ttk, messagebox
 from PIL import ImageTk, Image
-import DAL.connection as connection
 import DAL.manipulation as manipulation
 
 
@@ -62,6 +61,8 @@ class LoginFrame(Frame):
             self.master.state = 1
             self.destroy()
             self.master.updateState()
-            print("pass")
+            print("Log in successfully")
         else:
-            print("WTF")
+            messagebox.showwarning(
+                "Warning", "Please check your username/password!")
+            print("WTF try to check your username/password")
