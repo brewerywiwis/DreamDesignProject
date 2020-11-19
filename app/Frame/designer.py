@@ -9,7 +9,7 @@ from config import appConfig
 config = appConfig()
 
 
-class CustomerFrame(Frame):
+class DesignerFrame(Frame):
     def __init__(self, master=None):
         super().__init__(master, width=config[0],
                          height=config[1], bg="#e9e9e9")
@@ -21,16 +21,16 @@ class CustomerFrame(Frame):
         pw = self.passwordAddInput.get()
         print(username, pw)
         ####
-        if manipulation.insertCustomer(username, pw):
+        if manipulation.insertDesigner(username, pw):
             messagebox.showinfo(
-                title="Detail", message="Insert customer successfully!")
+                title="Detail", message="Insert designer successfully!")
         else:
             messagebox.showwarning(
-                title="Detail", message="The system can not insert customer!")
+                title="Detail", message="The system can not insert designer!")
         ####
 
     def query(self):
-        listUser = manipulation.queryCustomer()
+        listUser = manipulation.queryDesigner()
         self.listBox.delete(*self.listBox.get_children())
         # for testing scrollbar, comment upper line
         for i, k in enumerate(listUser):
@@ -48,12 +48,12 @@ class CustomerFrame(Frame):
         pass
 
     def delUser(self):
-        if manipulation.deleteCustomer(self.usernameDelInput.get()):
+        if manipulation.deleteDesigner(self.usernameDelInput.get()):
             messagebox.showinfo(
-                title="Detail", message="Delete customer successfully!")
+                title="Detail", message="Delete designer successfully!")
         else:
             messagebox.showwarning(
-                title="Detail", message="The system can not delete customer!")
+                title="Detail", message="The system can not delete designer!")
 
     def createInside(self):
         self.leftNotebook = ttk.Notebook(
@@ -108,7 +108,7 @@ class CustomerFrame(Frame):
 
         self.frameInsideAddFrame = Frame(self.addFrame, bg='white')
         self.addDsc = Label(
-            self.frameInsideAddFrame, text="Add Customer to dream desgin", bg="white", font=("default", 21))
+            self.frameInsideAddFrame, text="Add Designer to dream desgin", bg="white", font=("default", 21))
         self.addDsc.pack()
 
         self.usernameAddLabel = Label(
@@ -144,7 +144,7 @@ class CustomerFrame(Frame):
         self.frameInsideDelFrame = Frame(self.deleteFrame, bg='white')
 
         self.delDsc = Label(
-            self.frameInsideDelFrame, text="Delete Customer from dream desgin", bg="white", font=("default", 21))
+            self.frameInsideDelFrame, text="Delete Designer from dream desgin", bg="white", font=("default", 21))
         self.delDsc.pack()
 
         self.usernameDelLabel = Label(
