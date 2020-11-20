@@ -1,0 +1,9 @@
+SELECT * FROM user WHERE uid > 2000000000000;
+
+INSERT INTO user
+VALUES (2234567892234, 'somsak', 's1223ssd'),
+    (2234567892235, 'SomChAi', 'g9ad6fah2es8'),
+    (2234567892236, 'SOMYING', 'd3k4a34ssda'),
+    (2234567893236, 'SoM_$$!&#', 'd3k4a34ssda');
+
+SELECT * FROM user WHERE uid > 2000000000000;
