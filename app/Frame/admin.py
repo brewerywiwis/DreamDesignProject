@@ -141,7 +141,7 @@ class AdminFrame(Frame):
         self.frameInsideDelAdmin = Frame(self.deleteAdmin, bg='white')
 
         self.delDscAdmin = Label(
-            self.frameInsideDelAdmin, text="Delete admin to dream desgin", bg="white", font=("default", 21))
+            self.frameInsideDelAdmin, text="Delete admin from dream desgin", bg="white", font=("default", 21))
         self.delDscAdmin.pack()
 
         self.usernameDelAdminLabel = Label(

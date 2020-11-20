@@ -5,6 +5,8 @@ from tkinter import ttk
 from PIL import ImageTk, Image
 import DAL.connection as connection
 import DAL.manipulation as manipulation
+from Frame.customer import CustomerFrame
+from Frame.designer import DesignerFrame
 from Frame.admin import AdminFrame
 from config import appConfig
 
@@ -27,10 +29,19 @@ class InApp(Frame):
             self.master, width=config[0], height=config[1]-statusBarHeight)
         self.notebook.pack(fill="both", expand=1)
 
-        self.customerFrame = Frame(
-            self.notebook, width=self.master.winfo_width(), height=self.master.winfo_height(), bg="#e9e9e9")
-        self.designerFrame = Frame(
-            self.notebook, width=self.master.winfo_width(), height=self.master.winfo_height(), bg="#e9e9e9")
+        ##################### CUSTOMER FRAME #################################
+
+        self.customerFrame = CustomerFrame(master=self.notebook)
+
+        ###################################################################
+
+        ##################### DESIGNER FRAME #################################
+
+        # self.designerFrame = Frame(
+        #     self.notebook, width=self.master.winfo_width(), height=self.master.winfo_height(), bg="#e9e9e9")
+        self.designerFrame = DesignerFrame(master=self.notebook)
+
+        ###################################################################
         self.matchFrame = Frame(
             self.notebook, width=self.master.winfo_width(), height=self.master.winfo_height(), bg="#e9e9e9")
         self.jobFrame = Frame(
