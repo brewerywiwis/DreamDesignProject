@@ -18,3 +18,6 @@ usernameToLower     > lowercase username on insert
 
 ### Complex
 getRandomAds.sql        > Random N advertise from different email
+
+### Fuction
+FeeCalulation.sql   > calculate transaction fee
