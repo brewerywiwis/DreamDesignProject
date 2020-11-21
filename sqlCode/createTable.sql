@@ -1,7 +1,8 @@
 CREATE TABLE IF NOT EXISTS user(
     uid BIGINT NOT NULL AUTO_INCREMENT,
     username VARCHAR(20),
-    password VARCHAR(20),
+    password VARCHAR(50),
+    salt VARCHAR(50),
     PRIMARY KEY (uid)
     ADD UNIQUE INDEX `uid_UNIQUE` (`uid` ASC);
 );
