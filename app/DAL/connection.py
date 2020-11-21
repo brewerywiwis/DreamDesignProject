@@ -20,3 +20,6 @@ class db:
 
     def getDB(self):
         return self.db
+
+    def close(self):
+        self.db.close()
