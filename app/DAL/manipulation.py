@@ -1,7 +1,7 @@
 def queryUser(db):
     cursor = db.cursor()
 
-    query = ("SELECT * FROM User")
+    query = ("SELECT * FROM user")
 
     # hire_start = datetime.date(1999, 1, 1)
     # hire_end = datetime.date(1999, 12, 31)
