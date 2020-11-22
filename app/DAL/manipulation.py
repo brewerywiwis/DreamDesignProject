@@ -13,22 +13,6 @@ def validUser(username, password):
 
     return 1 if len(result) else 0
 
-    query = ("SELECT * FROM user")
-
-    # hire_start = datetime.date(1999, 1, 1)
-    # hire_end = datetime.date(1999, 12, 31)
-
-    cursor.execute(query)
-    result = list(cursor)
-    # for (first_name, last_name, hire_date) in cursor:
-    #     print("{}, {} was hired on {:%d %b %Y}".format(
-    #         last_name, first_name, hire_date))
-    # for i in cursor:
-    #     print(i)
-
-    cursor.close()
-    return result
-
 
 def insertUser(name, pw):
     global db
@@ -99,16 +83,6 @@ def insertCustomer(name, pw):
             return False
 
 
-# def queryCustomer():
-#     global db
-#     cursor = db.cursor()
-#     query = ("SELECT * FROM dreamdesignDB.customer NATURAL JOIN dreamdesignDB.user")
-#     cursor.execute(query)
-#     result = list(cursor)
-#     cursor.close()
-#     return result
-
-
 def queryCustomer(option, value):
     global db
     cursor = db.cursor()
@@ -127,10 +101,32 @@ def queryCustomer(option, value):
     return result
 
 
+def updateCustomer(name, newPassword):
+    global db
+    cursor = db.cursor()
+    try:
+        sql0 = "select * from dreamdesignDB.user natural join dreamdesignDB.customer where username=%s"
+        cursor.execute(sql0, (name,))
+        ls = list(cursor)
+        id = -1
+        if len(ls):
+            id = ls[0][0]
+        if id == -1:
+            return False
+        sql = "update dreamdesignDB.user\
+        set password = %s where username = %s"
+        cursor.execute(sql, (newPassword, name))
+        db.commit()
+        cursor.close()
+        return True
+    except:
+        return False
+
+
 def deleteCustomer(name):
     global db
     cursor = db.cursor()
-    print(name)
+    # print(name)
     try:
         sql1 = "SELECT * FROM dreamdesignDB.customer NATURAL JOIN dreamdesignDB.user where username=%s;"
         cursor.execute(sql1, (name,))
@@ -143,8 +139,6 @@ def deleteCustomer(name):
             return False
         sql2 = "DELETE FROM dreamdesignDB.customer WHERE uid=%s;"
         cursor.execute(sql2, (id,))
-        # sql3 = "DELETE FROM dreamdesignDB.user WHERE uid=%s;"
-        # cursor.execute(sql3, (id,))
         db.commit()
         cursor.close()
         return True
@@ -209,16 +203,6 @@ def insertDesigner(name, pw):
             return False
 
 
-# def queryDesigner():
-#     global db
-#     cursor = db.cursor(dictionary=True)
-#     query = ("SELECT * FROM dreamdesignDB.designer NATURAL JOIN dreamdesignDB.user")
-#     cursor.execute(query)
-#     result = [[row["uid"], row["username"], row["password"]] for row in cursor]
-#     cursor.close()
-#     return result
-
-
 def queryDesigner(option, value):
     global db
     cursor = db.cursor(dictionary=True)
@@ -237,6 +221,28 @@ def queryDesigner(option, value):
     return result
 
 
+def updateDesigner(name, newPassword):
+    global db
+    cursor = db.cursor()
+    try:
+        sql0 = "select * from dreamdesignDB.user natural join dreamdesignDB.designer where username=%s"
+        cursor.execute(sql0, (name,))
+        ls = list(cursor)
+        id = -1
+        if len(ls):
+            id = ls[0][0]
+        if id == -1:
+            return False
+        sql = "update dreamdesignDB.user\
+        set password = %s where username = %s"
+        cursor.execute(sql, (newPassword, name))
+        db.commit()
+        cursor.close()
+        return True
+    except:
+        return False
+
+
 def deleteDesigner(name):
     global db
     cursor = db.cursor()
@@ -253,8 +259,6 @@ def deleteDesigner(name):
             return False
         sql2 = "DELETE FROM dreamdesignDB.designer WHERE uid=%s;"
         cursor.execute(sql2, (id,))
-        # sql3 = "DELETE FROM dreamdesignDB.user WHERE uid=%s;"
-        # cursor.execute(sql3, (id,))
         db.commit()
         cursor.close()
         return True
@@ -265,58 +269,6 @@ def deleteDesigner(name):
 ################################# DESIGNER #####################################
 
 ################################# MATCH #####################################
-
-
-# def insertDesigner(name, pw):
-#     global db
-#     sql = ("SELECT * FROM dreamdesignDB.user WHERE username=%s;")
-#     cursor = db.cursor()
-#     cursor.execute(sql, (name,))
-#     ls = list(cursor)
-#     id = -1
-#     if len(ls):
-#         id = ls[0][0]
-#     if id == -1:
-#         if len(name) and len(pw) and insertUser(name, pw):
-#             sql1 = "select * from user where username=%s and password=%s"
-#             cursor.execute(sql1, (name, pw))
-#             ls = list(cursor)
-#             id = -1
-#             if len(ls):
-#                 id = ls[0][0]
-#             else:
-#                 sql2 = "DELETE FROM dreamdesignDB.user WHERE username=%s;"
-#                 cursor.execute(sql2, (name,))
-#                 db.commit()
-#                 cursor.close()
-#                 return False
-#             try:
-#                 sql2 = ("INSERT INTO dreamdesignDB.designer (uid) VALUES (%s);")
-#                 cursor.execute(sql2, (id,))
-#                 db.commit()
-#                 cursor.close()
-#                 return True
-#             except:
-#                 print("Something went wrong: insert user")
-#                 sql2 = "DELETE FROM dreamdesignDB.user WHERE username=%s;"
-#                 cursor.execute(sql2, (name,))
-#                 db.commit()
-#                 cursor.close()
-#                 return False
-#         else:
-#             cursor.close()
-#             return False
-#     else:
-#         try:
-#             sql2 = ("INSERT INTO dreamdesignDB.designer (uid) VALUES (%s);")
-#             cursor.execute(sql2, (id,))
-#             db.commit()
-#             cursor.close()
-#             return True
-#         except:
-#             print("Something went wrong: not insert user")
-#             cursor.close()
-#             return False
 
 
 def queryMatch(option, value):
@@ -353,19 +305,8 @@ def deleteMatch(id):
     cursor = db.cursor()
     # print(name)
     try:
-        # sql1 = "SELECT * FROM dreamdesignDB.designer NATURAL JOIN dreamdesignDB.user where username=%s;"
-        # cursor.execute(sql1, (name,))
-        # ls = list(cursor)
-        # id = -1
-        # if len(ls):
-        #     id = ls[0][0]
-        # else:
-        #     cursor.close()
-        #     return False
         sql2 = "DELETE FROM dreamdesignDB.matchs WHERE mid=%s;"
         cursor.execute(sql2, (id,))
-        # sql3 = "DELETE FROM dreamdesignDB.user WHERE uid=%s;"
-        # cursor.execute(sql3, (id,))
         db.commit()
         cursor.close()
         return True
@@ -430,16 +371,6 @@ def insertAdmin(name, pw):
             return False
 
 
-# def queryAdmin():
-#     global db
-#     cursor = db.cursor()
-#     query = ("SELECT * FROM dreamdesignDB.admin NATURAL JOIN dreamdesignDB.user")
-#     cursor.execute(query)
-#     result = list(cursor)
-#     cursor.close()
-#     return result
-
-
 def queryAdmin(option, value):
     global db
     cursor = db.cursor(dictionary=True)
@@ -455,6 +386,28 @@ def queryAdmin(option, value):
     result = [[row["uid"], row["username"], row["password"]] for row in cursor]
     cursor.close()
     return result
+
+
+def updateAdmin(name, newPassword):
+    global db
+    cursor = db.cursor()
+    try:
+        sql0 = "select * from dreamdesignDB.user natural join dreamdesignDB.admin where username=%s"
+        cursor.execute(sql0, (name,))
+        ls = list(cursor)
+        id = -1
+        if len(ls):
+            id = ls[0][0]
+        if id == -1:
+            return False
+        sql = "update dreamdesignDB.user\
+        set password = %s where username = %s"
+        cursor.execute(sql, (newPassword, name))
+        db.commit()
+        cursor.close()
+        return True
+    except:
+        return False
 
 
 def deleteAdmin(name):
@@ -473,8 +426,6 @@ def deleteAdmin(name):
             return False
         sql2 = "DELETE FROM dreamdesignDB.admin WHERE uid=%s;"
         cursor.execute(sql2, (id,))
-        # sql3 = "DELETE FROM dreamdesignDB.user WHERE uid=%s;"
-        # cursor.execute(sql3, (id,))
         db.commit()
         cursor.close()
         return True

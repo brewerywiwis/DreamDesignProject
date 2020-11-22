@@ -51,8 +51,6 @@ class InApp(Frame):
 
         ###################################################################
 
-        #self.jobFrame = JobFrame(
-        #    self.notebook, width=self.master.winfo_width(), height=self.master.winfo_height(), bg="#e9e9e9")
         self.contractFrame = Frame(
             self.notebook, width=self.master.winfo_width(), height=self.master.winfo_height(), bg="#e9e9e9")
         self.transactionFrame = Frame(
@@ -76,12 +74,12 @@ class InApp(Frame):
         ###################################################################
         self.notebook.add(self.customerFrame, text="Customer")
         self.notebook.add(self.designerFrame, text="Designer")
+        self.notebook.add(self.adminFrame, text="Admin")
         self.notebook.add(self.matchFrame, text="Match history")
         self.notebook.add(self.jobFrame, text="Job posting")
-        self.notebook.add(self.contractFrame, text="Contract")
-        self.notebook.add(self.transactionFrame, text="Transaction")
-        self.notebook.add(self.adsFrame, text="Advertisement")
-        self.notebook.add(self.adminFrame, text="Admin")
+        # self.notebook.add(self.contractFrame, text="Contract")
+        # self.notebook.add(self.transactionFrame, text="Transaction")
+        # self.notebook.add(self.adsFrame, text="Advertisement")
 
         self.statusBar = Label(
             self.master, text="status", width=config[0], height=statusBarHeight, bg="#e2e2e2", anchor="e")

@@ -34,18 +34,8 @@ class MatchFrame(Frame):
         self.listBox.delete(*self.listBox.get_children())
         # for testing scrollbar, comment upper line
         for i, k in enumerate(listUser):
-            # self.listAdminBox.insert("end", i)
             self.listBox.insert("", 'end', text="",
                                 values=(k[0], k[1], k[2], k[3]))
-
-    def deleteFromSelected(self):
-        # if manipulation.deleteAdmin(self.usernameDelInput.get()):
-        #     messagebox.showinfo(
-        #         title="Detail", message="Delete admin successfully!")
-        # else:
-        #     messagebox.showwarning(
-        #         title="Detail", message="The system can not delete admin!")
-        pass
 
     def searchFromInput(self):
         mapDropdownValue = {"Match id": "mid", "Designer name": "designer_name",
@@ -82,10 +72,6 @@ class MatchFrame(Frame):
         self.refreshBtn = Button(
             self.buttonListFrame, text="list all", command=self.query, width=10)
         self.refreshBtn.pack(side="right")
-
-        # self.deleteBtn = Button(
-        #     self.buttonListFrame, text="delete", command=self.deleteFromSelected, width=10)
-        # self.deleteBtn.pack(side="right")
 
         self.searchButton = Button(
             self.buttonListFrame, text="list by search", command=self.searchFromInput, width=10)

@@ -69,7 +69,7 @@ class JobFrame(Frame):
         ), height=20)
 
         self.refreshBtn = Button(
-            self.buttonListFrame, text="list", command=self.query, width=10)
+            self.buttonListFrame, text="list all", command=self.query, width=10)
         self.refreshBtn.pack(side="right")
 
         # self.deleteBtn = Button(
@@ -130,7 +130,7 @@ class JobFrame(Frame):
 
         self.frameInsideAddFrame = Frame(self.addFrame, bg='white')
         self.addDsc = Label(
-            self.frameInsideAddFrame, text="Add Customer to dream desgin", bg="white", font=("default", 21))
+            self.frameInsideAddFrame, text="Add job post to dream desgin", bg="white", font=("default", 21))
         self.addDsc.pack()
 
         self.designerIdAddLabel = Label(

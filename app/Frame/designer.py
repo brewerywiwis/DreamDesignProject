@@ -32,7 +32,6 @@ class DesignerFrame(Frame):
     def query(self):
         listUser = manipulation.queryDesigner(option="all", value="none")
         self.listBox.delete(*self.listBox.get_children())
-        # for testing scrollbar, comment upper line
         for i, k in enumerate(listUser):
             self.listBox.insert("", 'end', text="",
                                 values=(k[0], k[1], k[2]))
@@ -43,19 +42,17 @@ class DesignerFrame(Frame):
         listUser = manipulation.queryDesigner(
             option=mapDropdownValue[self.dropdown.get()], value=self.searchInput.get())
         self.listBox.delete(*self.listBox.get_children())
-        # for testing scrollbar, comment upper line
         for i, k in enumerate(listUser):
             self.listBox.insert("", 'end', text="",
                                 values=(k[0], k[1], k[2]))
 
-    def deleteFromSelected(self):
-        # if manipulation.deleteAdmin(self.usernameDelInput.get()):
-        #     messagebox.showinfo(
-        #         title="Detail", message="Delete admin successfully!")
-        # else:
-        #     messagebox.showwarning(
-        #         title="Detail", message="The system can not delete admin!")
-        pass
+    def updateUser(self):
+        if manipulation.updateDesigner(self.usernameUpdateInput.get(), self.passwordUpdateInput.get()):
+            messagebox.showinfo(
+                title="Detail", message="Update customer with new password successfully!")
+        else:
+            messagebox.showwarning(
+                title="Detail", message="The system can not update new password of customer!")
 
     def delUser(self):
         if manipulation.deleteDesigner(self.usernameDelInput.get()):
@@ -78,12 +75,8 @@ class DesignerFrame(Frame):
         ), height=20)
 
         self.refreshBtn = Button(
-            self.buttonListFrame, text="list", command=self.query, width=10)
+            self.buttonListFrame, text="list all", command=self.query, width=10)
         self.refreshBtn.pack(side="right")
-
-        # self.deleteBtn = Button(
-        #     self.buttonListFrame, text="delete", command=self.deleteFromSelected, width=10)
-        # self.deleteBtn.pack(side="right")
 
         self.searchButton = Button(
             self.buttonListFrame, text="list by search", command=self.searchFromInput, width=10)
@@ -165,6 +158,41 @@ class DesignerFrame(Frame):
             fill="both", expand=1, anchor="center", pady=(100, 0))
 
         self.leftNotebook.add(self.addFrame, text='add')
+
+        ####
+
+        self.updateFrame = Frame(self.leftNotebook, bg='white', width=self.master.winfo_width(
+        ), height=self.master.winfo_height())
+
+        self.frameInsideUpdateFrame = Frame(self.updateFrame, bg='white')
+        self.updateDsc = Label(
+            self.frameInsideUpdateFrame, text="Update password of Customer in dream desgin", bg="white", font=("default", 21))
+        self.updateDsc.pack()
+
+        self.usernameUpdateLabel = Label(
+            self.frameInsideUpdateFrame, text="Username", bg="white", font=("default", 10))
+        self.usernameUpdateLabel.pack(pady=(20, 0))
+
+        self.usernameUpdateInput = ttk.Entry(
+            self.frameInsideUpdateFrame, width=50, style='pad.TEntry')
+        self.usernameUpdateInput.pack()
+
+        self.passwordLabel = Label(
+            self.frameInsideUpdateFrame, text="Password", bg="white", font=("default", 10))
+        self.passwordLabel.pack()
+
+        self.passwordUpdateInput = ttk.Entry(
+            self.frameInsideUpdateFrame, width=50, style='pad.TEntry')
+        self.passwordUpdateInput.pack()
+
+        self.updateBtn = Button(
+            self.frameInsideUpdateFrame, text="Add", command=self.updateUser, width=30)
+        self.updateBtn.pack(pady=(20, 0))
+
+        self.frameInsideUpdateFrame.pack(
+            fill="both", expand=1, anchor="center", pady=(100, 0))
+
+        self.leftNotebook.add(self.updateFrame, text='update')
 
         ####
 
