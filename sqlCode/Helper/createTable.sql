@@ -74,3 +74,5 @@ CREATE TABLE IF NOT EXISTS contract(
     PRIMARY KEY (ctid),
     FOREIGN KEY (mid) REFERENCES matchs(mid) ON UPDATE CASCADE ON DELETE CASCADE
 );
+\! clear
+\! echo "Create table complete"

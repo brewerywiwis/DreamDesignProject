@@ -1,3 +1,6 @@
+\! clear
+\! echo "Begin test getRandomAds"
+
 DELETE FROM Advertisement;
 
 INSERT INTO Advertisement VALUES
@@ -22,12 +25,16 @@ INSERT INTO Advertisement VALUES
 (NULL, 1234567891245, '2020/10/14', '2020/11/14', 'adthailand@gmail.com', 'BLOB of adthailand2.png'),
 (NULL, 1234567891245, '2020/10/14', '2020/12/14', 'adthailand@gmail.com', 'BLOB of adthailand3.png');
 
+\! echo "Show all aid group by email"
 SELECT advertiserEmail, GROUP_CONCAT(aid) AS aidList
 FROM Advertisement
 WHERE endDate > NOW()
 GROUP BY advertiserEmail;
 
 -- CALL Function to test
+\! echo "Call getRandomAds N = 2"
 CALL getRandomAds(2);
+\! echo "Call getRandomAds N = 2"
 CALL getRandomAds(2);
+\! echo "Call getRandomAds N = 8"
 CALL getRandomAds(8);

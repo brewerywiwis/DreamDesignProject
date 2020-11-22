@@ -7,3 +7,5 @@ DROP TABLE IF EXISTS designer;
 DROP TABLE IF EXISTS customer;
 DROP TABLE IF EXISTS admin;
 DROP TABLE IF EXISTS user;
+\! clear
+\! echo "Drop all table complete"

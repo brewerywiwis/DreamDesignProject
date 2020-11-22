@@ -5,3 +5,4 @@ CREATE TRIGGER usernameToLower
 BEFORE INSERT
 ON user FOR EACH ROW
 SET NEW.username = LOWER(NEW.username);
+\! echo "Create usernameToLower trigger"
