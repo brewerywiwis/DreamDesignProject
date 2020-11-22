@@ -286,6 +286,7 @@ def deleteDesigner(name):
 def queryMatch(option, value):
     global db
     cursor = db.cursor(dictionary=True)
+
     if option == "all":
         query = ("select mid,designer_name,username as customer_name,tid\
                 from (SELECT mid,username as designer_name,cid,tid\
@@ -294,20 +295,20 @@ def queryMatch(option, value):
                 ) as T1\
                 join dreamdesignDB.user on dreamdesignDB.user.uid = T1.cid")
         cursor.execute(query)
-        result = [[row["mid"], row["designer_name"],
-                   row["customer_name"], row["tid"]] for row in cursor]
-        cursor.close()
     else:
-        query = ("select mid,designer_name,username as customer_name,tid\
+        query = (f"select mid,designer_name,customer_name,tid\
+                from (select mid,designer_name,username as customer_name,tid\
                 from (SELECT mid,username as designer_name,cid,tid\
                 FROM dreamdesignDB.matchs\
                 join dreamdesignDB.user on dreamdesignDB.user.uid = matchs.did\
                 ) as T1\
-                join dreamdesignDB.user on dreamdesignDB.user.uid = T1.cid where %s = %s")
-        cursor.execute(query, option, value)
-        result = [[row["mid"], row["designer_name"],
-                   row["customer_name"], row["tid"]] for row in cursor]
-        cursor.close()
+                join dreamdesignDB.user on dreamdesignDB.user.uid = T1.cid) as T2\
+                where {option} = %s")
+        cursor.execute(query, (value,))
+
+    result = [[row["mid"], row["designer_name"],
+               row["customer_name"], row["tid"]] for row in cursor]
+    cursor.close()
     return result
 
 
@@ -432,6 +433,7 @@ def deleteAdmin(name):
 
 ################################# JOB POSTING #####################################
 
+
 def queryJobPosting():
     global db
     cursor = db.cursor()
@@ -442,6 +444,7 @@ def queryJobPosting():
     result = list(cursor)
     cursor.close()
     return result
+
 
 def deleteJobPosting(id):
     global db
@@ -454,7 +457,7 @@ def deleteJobPosting(id):
         if len(ls) != 1:
             cursor.close()
             return False
-        if(int(id)==int(ls[0][0])):
+        if(int(id) == int(ls[0][0])):
             sql2 = "DELETE FROM dreamdesignDB.jobposting WHERE jid=%s;"
             cursor.execute(sql2, (id,))
             db.commit()
@@ -466,13 +469,14 @@ def deleteJobPosting(id):
         cursor.close()
         return False
 
+
 def insertJobPosting(id, descriptionInput):
     global db
     sql = ("SELECT uid FROM dreamdesignDB.designer WHERE uid=%s;")
     cursor = db.cursor()
     cursor.execute(sql, (id,))
     ls = list(cursor)
-    #print(ls)
+    # print(ls)
     #print(id, descriptionInput)
     id = -1
     if len(ls):
@@ -483,7 +487,8 @@ def insertJobPosting(id, descriptionInput):
         return False
     else:
         try:
-            sql2 = ("INSERT INTO dreamdesignDB.jobposting (did, description) VALUES (%s, %s);")
+            sql2 = (
+                "INSERT INTO dreamdesignDB.jobposting (did, description) VALUES (%s, %s);")
             cursor.execute(sql2, (id, descriptionInput))
             db.commit()
             cursor.close()

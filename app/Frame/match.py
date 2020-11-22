@@ -48,8 +48,10 @@ class MatchFrame(Frame):
         pass
 
     def searchFromInput(self):
+        mapDropdownValue = {"Match id": "mid", "Designer name": "designer_name",
+                            "Customer name": "customer_name", "Transaction id": "tid"}
         listUser = manipulation.queryMatch(
-            option=self.dropdown.get(), value=self.inputLabel.get())
+            option=mapDropdownValue[self.dropdown.get()], value=self.searchInput.get())
         self.listBox.delete(*self.listBox.get_children())
         # for testing scrollbar, comment upper line
         for i, k in enumerate(listUser):
