@@ -19,3 +19,4 @@ BEGIN
     LIMIT N;
 END $$
 DELIMITER ;
+\! echo "Create getRandomAds complex query"

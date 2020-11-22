@@ -15,3 +15,4 @@ BEGIN
     WHERE uid = NEW.did;
 END $$
 DELIMITER ;
+\! echo "Create updateReviewScoreInMatch trigger"

@@ -9,6 +9,7 @@ from Frame.customer import CustomerFrame
 from Frame.designer import DesignerFrame
 from Frame.match import MatchFrame
 from Frame.admin import AdminFrame
+from Frame.job import JobFrame
 from config import appConfig
 
 config = appConfig()
@@ -44,10 +45,14 @@ class InApp(Frame):
         # self.matchFrame = MatchFrame(
         #     self.notebook, width=self.master.winfo_width(), height=self.master.winfo_height(), bg="#e9e9e9")
 
+        ##################### JOB POSTING FRAME ############################
+
+        self.jobFrame = JobFrame(master=self.notebook)
+
         ###################################################################
 
-        self.jobFrame = Frame(
-            self.notebook, width=self.master.winfo_width(), height=self.master.winfo_height(), bg="#e9e9e9")
+        #self.jobFrame = JobFrame(
+        #    self.notebook, width=self.master.winfo_width(), height=self.master.winfo_height(), bg="#e9e9e9")
         self.contractFrame = Frame(
             self.notebook, width=self.master.winfo_width(), height=self.master.winfo_height(), bg="#e9e9e9")
         self.transactionFrame = Frame(

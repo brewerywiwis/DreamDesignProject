@@ -429,3 +429,68 @@ def deleteAdmin(name):
         return False
 
 ################################# ADMIN #####################################
+
+################################# JOB POSTING #####################################
+
+def queryJobPosting():
+    global db
+    cursor = db.cursor()
+    query = ("select JP.jid, UU.username, JP.description\
+            FROM dreamdesignDB.jobposting JP, dreamdesignDB.designer D, dreamdesignDB.user UU\
+            WHERE UU.uid = D.uid AND JP.did = D.uid")
+    cursor.execute(query)
+    result = list(cursor)
+    cursor.close()
+    return result
+
+def deleteJobPosting(id):
+    global db
+    cursor = db.cursor()
+    # print(name)
+    try:
+        sql1 = "SELECT jid FROM dreamdesignDB.jobposting WHERE jid=%s;"
+        cursor.execute(sql1, (id,))
+        ls = list(cursor)
+        if len(ls) != 1:
+            cursor.close()
+            return False
+        if(int(id)==int(ls[0][0])):
+            sql2 = "DELETE FROM dreamdesignDB.jobposting WHERE jid=%s;"
+            cursor.execute(sql2, (id,))
+            db.commit()
+            cursor.close()
+            print('Deleted Already!')
+            return True
+    except:
+        print('Something is wrong.')
+        cursor.close()
+        return False
+
+def insertJobPosting(id, descriptionInput):
+    global db
+    sql = ("SELECT uid FROM dreamdesignDB.designer WHERE uid=%s;")
+    cursor = db.cursor()
+    cursor.execute(sql, (id,))
+    ls = list(cursor)
+    #print(ls)
+    #print(id, descriptionInput)
+    id = -1
+    if len(ls):
+        id = ls[0][0]
+    if id == -1:
+        cursor.close()
+        print('''This designer id isn't exits''')
+        return False
+    else:
+        try:
+            sql2 = ("INSERT INTO dreamdesignDB.jobposting (did, description) VALUES (%s, %s);")
+            cursor.execute(sql2, (id, descriptionInput))
+            db.commit()
+            cursor.close()
+            return True
+        except:
+            print("Something went wrong: not insert user")
+            cursor.close()
+            return False
+
+################################# JOB POSTING #####################################
