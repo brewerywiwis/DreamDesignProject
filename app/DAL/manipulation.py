@@ -99,11 +99,29 @@ def insertCustomer(name, pw):
             return False
 
 
-def queryCustomer():
+# def queryCustomer():
+#     global db
+#     cursor = db.cursor()
+#     query = ("SELECT * FROM dreamdesignDB.customer NATURAL JOIN dreamdesignDB.user")
+#     cursor.execute(query)
+#     result = list(cursor)
+#     cursor.close()
+#     return result
+
+
+def queryCustomer(option, value):
     global db
     cursor = db.cursor()
-    query = ("SELECT * FROM dreamdesignDB.customer NATURAL JOIN dreamdesignDB.user")
-    cursor.execute(query)
+
+    if option == "all":
+        query = (
+            "SELECT * FROM dreamdesignDB.customer NATURAL JOIN dreamdesignDB.user")
+        cursor.execute(query)
+    else:
+        query = (
+            f"SELECT * FROM dreamdesignDB.customer NATURAL JOIN dreamdesignDB.user where {option} = %s")
+        cursor.execute(query, (value,))
+
     result = list(cursor)
     cursor.close()
     return result
@@ -191,11 +209,29 @@ def insertDesigner(name, pw):
             return False
 
 
-def queryDesigner():
+# def queryDesigner():
+#     global db
+#     cursor = db.cursor(dictionary=True)
+#     query = ("SELECT * FROM dreamdesignDB.designer NATURAL JOIN dreamdesignDB.user")
+#     cursor.execute(query)
+#     result = [[row["uid"], row["username"], row["password"]] for row in cursor]
+#     cursor.close()
+#     return result
+
+
+def queryDesigner(option, value):
     global db
     cursor = db.cursor(dictionary=True)
-    query = ("SELECT * FROM dreamdesignDB.designer NATURAL JOIN dreamdesignDB.user")
-    cursor.execute(query)
+
+    if option == "all":
+        query = (
+            "SELECT * FROM dreamdesignDB.designer NATURAL JOIN dreamdesignDB.user")
+        cursor.execute(query)
+    else:
+        query = (
+            f"SELECT * FROM dreamdesignDB.designer NATURAL JOIN dreamdesignDB.user where {option} = %s")
+        cursor.execute(query, (value,))
+
     result = [[row["uid"], row["username"], row["password"]] for row in cursor]
     cursor.close()
     return result
@@ -394,12 +430,29 @@ def insertAdmin(name, pw):
             return False
 
 
-def queryAdmin():
+# def queryAdmin():
+#     global db
+#     cursor = db.cursor()
+#     query = ("SELECT * FROM dreamdesignDB.admin NATURAL JOIN dreamdesignDB.user")
+#     cursor.execute(query)
+#     result = list(cursor)
+#     cursor.close()
+#     return result
+
+
+def queryAdmin(option, value):
     global db
-    cursor = db.cursor()
-    query = ("SELECT * FROM dreamdesignDB.admin NATURAL JOIN dreamdesignDB.user")
-    cursor.execute(query)
-    result = list(cursor)
+    cursor = db.cursor(dictionary=True)
+
+    if option == "all":
+        query = ("SELECT * FROM dreamdesignDB.admin NATURAL JOIN dreamdesignDB.user")
+        cursor.execute(query)
+    else:
+        query = (
+            f"SELECT * FROM dreamdesignDB.admin NATURAL JOIN dreamdesignDB.user where {option} = %s")
+        cursor.execute(query, (value,))
+
+    result = [[row["uid"], row["username"], row["password"]] for row in cursor]
     cursor.close()
     return result
 
@@ -434,14 +487,23 @@ def deleteAdmin(name):
 ################################# JOB POSTING #####################################
 
 
-def queryJobPosting():
+def queryJobPosting(option, value):
     global db
-    cursor = db.cursor()
-    query = ("select JP.jid, UU.username, JP.description\
-            FROM dreamdesignDB.jobposting JP, dreamdesignDB.designer D, dreamdesignDB.user UU\
-            WHERE UU.uid = D.uid AND JP.did = D.uid")
-    cursor.execute(query)
-    result = list(cursor)
+    cursor = db.cursor(dictionary=True)
+
+    if option == "all":
+        query = ("select JP.jid, UU.username, JP.description\
+                FROM dreamdesignDB.jobposting JP, dreamdesignDB.designer D, dreamdesignDB.user UU\
+                WHERE UU.uid = D.uid AND JP.did = D.uid")
+        cursor.execute(query)
+    else:
+        query = (f"select JP.jid, UU.username, JP.description\
+                FROM dreamdesignDB.jobposting JP, dreamdesignDB.designer D, dreamdesignDB.user UU\
+                WHERE UU.uid = D.uid AND JP.did = D.uid and {option} = %s")
+        cursor.execute(query, (value,))
+
+    result = [[row["jid"], row["username"],
+               row["description"]] for row in cursor]
     cursor.close()
     return result
 
@@ -477,7 +539,7 @@ def insertJobPosting(id, descriptionInput):
     cursor.execute(sql, (id,))
     ls = list(cursor)
     # print(ls)
-    #print(id, descriptionInput)
+    # print(id, descriptionInput)
     id = -1
     if len(ls):
         id = ls[0][0]

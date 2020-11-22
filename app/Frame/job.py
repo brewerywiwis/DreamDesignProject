@@ -25,15 +25,26 @@ class JobFrame(Frame):
                 title="Detail", message="Insert Job Posting successfully!")
         else:
             messagebox.showwarning(
-            title="Detail", message="The system can not insert this Job Posting!")
-       
+                title="Detail", message="The system can not insert this Job Posting!")
 
     def query(self):
-        listUser = manipulation.queryJobPosting()
+        "JobPosting id", "Designer id", "Description"
+        listUser = manipulation.queryJobPosting(option="all", value="none")
         self.listBox.delete(*self.listBox.get_children())
         # for testing scrollbar, comment upper line
         for i, k in enumerate(listUser):
             # self.listAdminBox.insert("end", i)
+            self.listBox.insert("", 'end', text="",
+                                values=(k[0], k[1], k[2]))
+
+    def searchFromInput(self):
+        mapDropdownValue = {"JobPosting id": "jid",
+                            "Designer id": "username"}
+        listUser = manipulation.queryJobPosting(
+            option=mapDropdownValue[self.dropdown.get()], value=self.searchInput.get())
+        self.listBox.delete(*self.listBox.get_children())
+        # for testing scrollbar, comment upper line
+        for i, k in enumerate(listUser):
             self.listBox.insert("", 'end', text="",
                                 values=(k[0], k[1], k[2]))
 
@@ -61,17 +72,37 @@ class JobFrame(Frame):
             self.buttonListFrame, text="list", command=self.query, width=10)
         self.refreshBtn.pack(side="right")
 
-        #self.deleteBtn = Button(
+        # self.deleteBtn = Button(
         #    self.buttonListFrame, text="delete", command=self.deleteFromSelected, width=10)
-        #self.deleteBtn.pack(side="right")
+        # self.deleteBtn.pack(side="right")
 
+        self.searchButton = Button(
+            self.buttonListFrame, text="list by search", command=self.searchFromInput, width=10)
+        self.searchButton.pack(side="right")
+
+        self.optionOfDropdown = [
+            "JobPosting id", "Designer id"]
+
+        self.dropdown = ttk.Combobox(
+            master=self.buttonListFrame, values=self.optionOfDropdown, state="readonly", width=15)
+        self.dropdown.current(0)
+        self.dropdown.pack(side="right")
+
+        self.searchInput = ttk.Entry(
+            self.buttonListFrame, width=50)
+        self.searchInput.pack(side="right")
+
+        self.inputLabel = Label(
+            self.buttonListFrame, text="Search", bg="#f6f8fa", font=("default", 10))
+        self.inputLabel.pack(side="right")
         self.listBox = ttk.Treeview(
             self.listFrame, height=config[1])
 
         self.listBox["columns"] = (
             "JobPosting id", "Designer id", "Description")
         self.listBox.column("#0", width=0, stretch=0)
-        self.listBox.column("JobPosting id", width=150, minwidth=150, stretch=0)
+        self.listBox.column("JobPosting id", width=150,
+                            minwidth=150, stretch=0)
         self.listBox.column(
             "Designer id", width=200, minwidth=100, stretch=0)
         self.listBox.column(
