@@ -3,28 +3,32 @@ CREATE TABLE IF NOT EXISTS user(
     username VARCHAR(20),
     password VARCHAR(50),
     salt VARCHAR(50),
-    PRIMARY KEY (uid)
-    ADD UNIQUE INDEX `uid_UNIQUE` (`uid` ASC);
+    PRIMARY KEY (uid),
+    UNIQUE KEY(uid)
+    -- ADD UNIQUE INDEX `uid_UNIQUE` (`uid` ASC);
 );
 CREATE TABLE IF NOT EXISTS designer(
     uid BIGINT NOT NULL AUTO_INCREMENT,
     bio VARCHAR(100),
     reviewScore FLOAT,
     PRIMARY KEY (uid),
-    FOREIGN KEY (uid) REFERENCES user(uid)
-    ADD UNIQUE INDEX `uid_UNIQUE` (`uid` ASC);
+    FOREIGN KEY (uid) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE,
+    UNIQUE KEY(uid)
+    -- ADD UNIQUE INDEX `uid_UNIQUE` (`uid` ASC);
 );
 CREATE TABLE IF NOT EXISTS customer(
     uid BIGINT NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (uid),
-    FOREIGN KEY (uid) REFERENCES user(uid)
-    ADD UNIQUE INDEX `uid_UNIQUE` (`uid` ASC);
+    FOREIGN KEY (uid) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE,
+    UNIQUE KEY(uid)
+    -- ADD UNIQUE INDEX `uid_UNIQUE` (`uid` ASC);
 );
 CREATE TABLE IF NOT EXISTS admin(
     uid BIGINT NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (uid),
-    FOREIGN KEY (uid) REFERENCES user(uid)
-    ADD UNIQUE INDEX `uid_UNIQUE` (`uid` ASC);
+    FOREIGN KEY (uid) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE,
+    UNIQUE KEY(uid)
+    -- ADD UNIQUE INDEX `uid_UNIQUE` (`uid` ASC);
 );
 CREATE TABLE IF NOT EXISTS transaction(
     tid BIGINT NOT NULL AUTO_INCREMENT,
@@ -42,7 +46,7 @@ CREATE TABLE IF NOT EXISTS advertisement(
     advertiserEmail VARCHAR(100),
     adPicture BLOB,
     PRIMARY KEY (aid),
-    FOREIGN KEY (uid) REFERENCES admin(uid)
+    FOREIGN KEY (uid) REFERENCES admin(uid) ON UPDATE CASCADE ON DELETE SET NULL
 );
 CREATE TABLE IF NOT EXISTS jobposting(
     jid BIGINT NOT NULL AUTO_INCREMENT,
@@ -50,7 +54,7 @@ CREATE TABLE IF NOT EXISTS jobposting(
     sampleWorks BLOB,
     description VARCHAR(500),
     PRIMARY KEY (jid),
-    FOREIGN KEY (did) REFERENCES designer(uid)
+    FOREIGN KEY (did) REFERENCES designer(uid) ON UPDATE CASCADE ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS matchs(
     mid BIGINT NOT NULL AUTO_INCREMENT,
@@ -59,14 +63,14 @@ CREATE TABLE IF NOT EXISTS matchs(
     tid BIGINT,
     score INT,
     PRIMARY KEY (mid),
-    FOREIGN KEY (did) REFERENCES designer(uid),
-    FOREIGN KEY (cid) REFERENCES customer(uid),
-    FOREIGN KEY (tid) REFERENCES transaction(tid)
+    FOREIGN KEY (did) REFERENCES designer(uid) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (cid) REFERENCES customer(uid) ON UPDATE CASCADE ON DELETE SET NULL,
+    FOREIGN KEY (tid) REFERENCES transaction(tid) ON UPDATE CASCADE ON DELETE SET NULL
 );
 CREATE TABLE IF NOT EXISTS contract(
     ctid BIGINT NOT NULL AUTO_INCREMENT,
     detail VARCHAR(300),
     mid BIGINT,
     PRIMARY KEY (ctid),
-    FOREIGN KEY (mid) REFERENCES matchs(mid)
+    FOREIGN KEY (mid) REFERENCES matchs(mid) ON UPDATE CASCADE ON DELETE CASCADE
 );
