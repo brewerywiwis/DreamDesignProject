@@ -283,19 +283,31 @@ def deleteDesigner(name):
 #             return False
 
 
-def queryMatch():
+def queryMatch(option, value):
     global db
     cursor = db.cursor(dictionary=True)
-    query = ("select mid,designer_name,username as customer_name,tid\
-            from (SELECT mid,username as designer_name,cid,tid\
-            FROM dreamdesignDB.matchs\
-            join dreamdesignDB.user on dreamdesignDB.user.uid = matchs.did\
-            ) as T1\
-            join dreamdesignDB.user on dreamdesignDB.user.uid = T1.cid")
-    cursor.execute(query)
-    result = [[row["mid"], row["designer_name"],
-               row["customer_name"], row["tid"]] for row in cursor]
-    cursor.close()
+    if option == "all":
+        query = ("select mid,designer_name,username as customer_name,tid\
+                from (SELECT mid,username as designer_name,cid,tid\
+                FROM dreamdesignDB.matchs\
+                join dreamdesignDB.user on dreamdesignDB.user.uid = matchs.did\
+                ) as T1\
+                join dreamdesignDB.user on dreamdesignDB.user.uid = T1.cid")
+        cursor.execute(query)
+        result = [[row["mid"], row["designer_name"],
+                   row["customer_name"], row["tid"]] for row in cursor]
+        cursor.close()
+    else:
+        query = ("select mid,designer_name,username as customer_name,tid\
+                from (SELECT mid,username as designer_name,cid,tid\
+                FROM dreamdesignDB.matchs\
+                join dreamdesignDB.user on dreamdesignDB.user.uid = matchs.did\
+                ) as T1\
+                join dreamdesignDB.user on dreamdesignDB.user.uid = T1.cid where %s = %s")
+        cursor.execute(query, option, value)
+        result = [[row["mid"], row["designer_name"],
+                   row["customer_name"], row["tid"]] for row in cursor]
+        cursor.close()
     return result
 
 

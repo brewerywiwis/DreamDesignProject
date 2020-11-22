@@ -30,7 +30,7 @@ class MatchFrame(Frame):
     #     ####
 
     def query(self):
-        listUser = manipulation.queryMatch()
+        listUser = manipulation.queryMatch(option="all", value="none")
         self.listBox.delete(*self.listBox.get_children())
         # for testing scrollbar, comment upper line
         for i, k in enumerate(listUser):
@@ -46,6 +46,16 @@ class MatchFrame(Frame):
         #     messagebox.showwarning(
         #         title="Detail", message="The system can not delete admin!")
         pass
+
+    def searchFromInput(self):
+        listUser = manipulation.queryMatch(
+            option=self.dropdown.get(), value=self.inputLabel.get())
+        self.listBox.delete(*self.listBox.get_children())
+        # for testing scrollbar, comment upper line
+        for i, k in enumerate(listUser):
+            # self.listAdminBox.insert("end", i)
+            self.listBox.insert("", 'end', text="",
+                                values=(k[0], k[1], k[2], k[3]))
 
     def delete(self):
         if manipulation.deleteMatch(self.usernameDelInput.get()):
@@ -68,12 +78,32 @@ class MatchFrame(Frame):
         ), height=20)
 
         self.refreshBtn = Button(
-            self.buttonListFrame, text="list", command=self.query, width=10)
+            self.buttonListFrame, text="list all", command=self.query, width=10)
         self.refreshBtn.pack(side="right")
 
-        self.deleteBtn = Button(
-            self.buttonListFrame, text="delete", command=self.deleteFromSelected, width=10)
-        self.deleteBtn.pack(side="right")
+        # self.deleteBtn = Button(
+        #     self.buttonListFrame, text="delete", command=self.deleteFromSelected, width=10)
+        # self.deleteBtn.pack(side="right")
+
+        self.searchButton = Button(
+            self.buttonListFrame, text="list by search", command=self.searchFromInput, width=10)
+        self.searchButton.pack(side="right")
+
+        self.optionOfDropdown = [
+            "Match id", "Designer name", "Customer name", "Transaction id"]
+
+        self.dropdown = ttk.Combobox(
+            master=self.buttonListFrame, values=self.optionOfDropdown, state="readonly", width=15)
+        self.dropdown.current(0)
+        self.dropdown.pack(side="right")
+
+        self.searchInput = ttk.Entry(
+            self.buttonListFrame, width=50)
+        self.searchInput.pack(side="right")
+
+        self.inputLabel = Label(
+            self.buttonListFrame, text="Search", bg="#f6f8fa", font=("default", 10))
+        self.inputLabel.pack(side="right")
 
         self.listBox = ttk.Treeview(
             self.listFrame, height=config[1])
