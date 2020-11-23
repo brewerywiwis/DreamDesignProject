@@ -1,0 +1,1 @@
+SELECT passwordHashing('123456','kr34g');
