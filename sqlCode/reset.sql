@@ -13,8 +13,7 @@ CREATE TABLE IF NOT EXISTS user(
     password VARCHAR(50),
     salt VARCHAR(50),
     PRIMARY KEY (uid),
-    UNIQUE KEY(uid)
-    -- ADD UNIQUE INDEX `uid_UNIQUE` (`uid` ASC);
+    UNIQUE KEY(uid) -- ADD UNIQUE INDEX `uid_UNIQUE` (`uid` ASC);
 );
 CREATE TABLE IF NOT EXISTS designer(
     uid BIGINT NOT NULL AUTO_INCREMENT,
@@ -22,22 +21,19 @@ CREATE TABLE IF NOT EXISTS designer(
     reviewScore FLOAT,
     PRIMARY KEY (uid),
     FOREIGN KEY (uid) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE,
-    UNIQUE KEY(uid)
-    -- ADD UNIQUE INDEX `uid_UNIQUE` (`uid` ASC);
+    UNIQUE KEY(uid) -- ADD UNIQUE INDEX `uid_UNIQUE` (`uid` ASC);
 );
 CREATE TABLE IF NOT EXISTS customer(
     uid BIGINT NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (uid),
     FOREIGN KEY (uid) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE,
-    UNIQUE KEY(uid)
-    -- ADD UNIQUE INDEX `uid_UNIQUE` (`uid` ASC);
+    UNIQUE KEY(uid) -- ADD UNIQUE INDEX `uid_UNIQUE` (`uid` ASC);
 );
 CREATE TABLE IF NOT EXISTS admin(
     uid BIGINT NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (uid),
     FOREIGN KEY (uid) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE,
-    UNIQUE KEY(uid)
-    -- ADD UNIQUE INDEX `uid_UNIQUE` (`uid` ASC);
+    UNIQUE KEY(uid) -- ADD UNIQUE INDEX `uid_UNIQUE` (`uid` ASC);
 );
 CREATE TABLE IF NOT EXISTS transaction(
     tid BIGINT NOT NULL AUTO_INCREMENT,
@@ -55,7 +51,8 @@ CREATE TABLE IF NOT EXISTS advertisement(
     advertiserEmail VARCHAR(100),
     adPicture BLOB,
     PRIMARY KEY (aid),
-    FOREIGN KEY (uid) REFERENCES admin(uid) ON UPDATE CASCADE ON DELETE SET NULL
+    FOREIGN KEY (uid) REFERENCES admin(uid) ON UPDATE CASCADE ON DELETE
+    SET NULL
 );
 CREATE TABLE IF NOT EXISTS jobposting(
     jid BIGINT NOT NULL AUTO_INCREMENT,
@@ -73,8 +70,10 @@ CREATE TABLE IF NOT EXISTS matchs(
     score INT,
     PRIMARY KEY (mid),
     FOREIGN KEY (did) REFERENCES designer(uid) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (cid) REFERENCES customer(uid) ON UPDATE CASCADE ON DELETE SET NULL,
-    FOREIGN KEY (tid) REFERENCES transaction(tid) ON UPDATE CASCADE ON DELETE SET NULL
+    FOREIGN KEY (cid) REFERENCES customer(uid) ON UPDATE CASCADE ON DELETE
+    SET NULL,
+        FOREIGN KEY (tid) REFERENCES transaction(tid) ON UPDATE CASCADE ON DELETE
+    SET NULL
 );
 CREATE TABLE IF NOT EXISTS contract(
     ctid BIGINT NOT NULL AUTO_INCREMENT,
@@ -93,9 +92,24 @@ VALUES (1234567891234, 'somsak', 's1223ssd', NULL),
     (1234567891240, 'mike1988', 'dsas2sad31asd', NULL),
     (1234567891241, 'pancake', 'edwqw3fdl54', NULL),
     (1234567891242, 'pitchaya', 'egslireas', NULL),
-    (1234567891243, 'bankgraphic', '346623178466', NULL),
-    (1234567891244, 'george', 'afs2132g2314df6221', NULL),
-    (1234567891245, 'chompu', 'g23fw4521a322dafd4', NULL);
+    (
+        1234567891243,
+        'bankgraphic',
+        '346623178466',
+        NULL
+    ),
+    (
+        1234567891244,
+        'george',
+        'afs2132g2314df6221',
+        NULL
+    ),
+    (
+        1234567891245,
+        'chompu',
+        'g23fw4521a322dafd4',
+        NULL
+    );
 INSERT INTO designer
 VALUES (
         1234567891236,
@@ -240,5 +254,115 @@ VALUES (
         '1. designer will design 1 logo for 1700 baht 2. designer will finish the work within 2 days 3. no more than 3 redesign customer will receive .JPG, .PDF and .AI files',
         2000000005
     );
-\! clear
-\! echo "Reset data complete"
+    
+CREATE INDEX ix_advertisement_startDate_endDate ON advertisement(startDate, endDate);
+CREATE INDEX ix_advertisement_endDate_startDate ON advertisement(endDate, startDate);
+
+DROP FUNCTION IF EXISTS passwordHashing;
+
+DELIMITER $$
+CREATE FUNCTION passwordHashing(plainPassword VARCHAR(50) , salt VARCHAR(50))
+	RETURNS VARCHAR(50)
+	DETERMINISTIC
+BEGIN
+	RETURN sha1(CONCAT( plainPassword , salt));
+END $$
+DELIMITER ;
+
+DROP FUNCTION IF EXISTS feeCalculation;
+
+DELIMITER $$
+CREATE FUNCTION feeCalculation(amount FLOAT)
+	RETURNS FLOAT
+	DETERMINISTIC
+BEGIN
+	RETURN (amount/10);
+END $$
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS updateReviewScoreInMatch;
+
+DELIMITER $$
+CREATE TRIGGER updateReviewScoreInMatch
+AFTER UPDATE
+ON matchs FOR EACH ROW
+BEGIN
+    UPDATE designer
+    SET reviewScore = (
+            SELECT AVG(score)
+            FROM Matchs 
+            WHERE did = NEW.did
+        )
+    WHERE uid = NEW.did;
+END $$
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS usernameToLower;
+
+CREATE TRIGGER usernameToLower
+BEFORE INSERT
+ON user FOR EACH ROW
+SET NEW.username = LOWER(NEW.username);
+
+DROP PROCEDURE IF EXISTS createUserWithEncryptedPassword;
+
+DELIMITER $$
+CREATE PROCEDURE createUserWithEncryptedPassword(
+	IN _uid BIGINT ,
+    IN _username VARCHAR(20) , 
+    IN _password VARCHAR(20) 
+    )
+BEGIN
+	DECLARE salt VARCHAR(50);
+	DECLARE encryptedPassword VARCHAR(50);
+	select md5(rand()) into salt;
+	select passwordHashing(_password,salt) into encryptedPassword;
+	
+    IF _uid != NULL THEN
+		INSERT INTO user (username, password , salt)
+		VALUES (_username,encryptedPassword,salt);
+	ELSE 
+		INSERT INTO user (uid,username, password , salt)
+		VALUES (_uid,_username,encryptedPassword,salt);
+    END IF;
+    
+    COMMIT;
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS loginWithUsernamePassword;
+
+DELIMITER $$
+CREATE PROCEDURE loginWithUsernamePassword(
+    IN _username VARCHAR(20) , 
+    IN _password VARCHAR(20) ,
+    OUT response BOOLEAN 
+    )
+BEGIN
+    DECLARE salt VARCHAR(50);
+    DECLARE encryptedPassword VARCHAR(50);
+    
+    SET response = FALSE;
+    
+	SELECT U.salt into salt
+    FROM user U
+    WHERE U.username = _username
+    LIMIT 1;
+    
+    IF salt IS NULL THEN
+		SET encryptedPassword = _password;
+	ELSE
+		SELECT passwordHashing(_password,salt) into encryptedPassword;
+    END IF;
+    
+    IF EXISTS 
+		(SELECT U.username
+		FROM user U
+		WHERE U.username = _username 
+        AND U.password = encryptedPassword) 
+	THEN
+        SET response = TRUE;
+	END IF;
+    
+END $$
+DELIMITER ;
